@@ -5170,11 +5170,11 @@ def route_fut(method: str, raw_path: str, headers: dict[str, str], body: bytes) 
     if low in ("/ut/shards", "/ut/shards/v2"):
         return 200, {}, json_bytes({
             "shardInfo": [{
-                "customdata1": "127.0.0.1",
+                "customdata1": "161.153.216.172",
                 "customdata2": str(CFG["fut_port"]),
                 "name": "LocalFUT15",
                 "platform": "pc",
-                "clientFacingIpPort": f"127.0.0.1:{CFG['fut_port']}",
+                "clientFacingIpPort": f"161.153.216.172:{CFG['fut_port']}",
             }]
         })
 
@@ -7075,12 +7075,12 @@ class RedirectHandler(BaseHTTPRequestHandler):
         raw = self.rfile.read(n) if n else b""
         seq = self.headers.get("X-BLAZE-SEQNO", "0")
         log.info("Redirector request %s %s body=%s", self.command, self.path, raw[:800])
-        ip_int = 2130706433  # 127.0.0.1 in host-order integer form used by old redirector XML.
+        ip_int = 2711214252  # 161.153.216.172 in host-order integer form used by old redirector XML.
         xml = f'''<?xml version="1.0" encoding="UTF-8"?>
 <serverinstanceinfo>
     <address member="0">
         <valu>
-            <hostname>127.0.0.1</hostname>
+            <hostname>161.153.216.172</hostname>
             <ip>{ip_int}</ip>
             <port>{int(CFG["blaze_port"])}</port>
         </valu>
@@ -7110,7 +7110,7 @@ class QosHandler(BaseHTTPRequestHandler):
         parsed = urllib.parse.urlsplit(self.path)
         q = urllib.parse.parse_qs(parsed.query)
         path = parsed.path.lower()
-        qos_ip_le = 16777343  # 127.0.0.1 interpreted as little-endian uint32.
+        qos_ip_le = 2899876257  # 161.153.216.172 interpreted as little-endian uint32.
 
         if path == "/qos/qos":
             qtyp = q.get("qtyp", ["1"])[0]
@@ -7475,12 +7475,12 @@ def _blaze_preauth_payload() -> bytes:
     )
 
     bwps = bytearray()
-    bwps += _tdf_field_str("PSA", "127.0.0.1")
+    bwps += _tdf_field_str("PSA", "161.153.216.172")
     bwps += _tdf_field_int("PSP", int(CFG["qos_port"]))
     bwps += _tdf_field_str("SNA", "qos")
 
     latency = bytearray()
-    latency += _tdf_field_str("PSA", "127.0.0.1")
+    latency += _tdf_field_str("PSA", "161.153.216.172")
     latency += _tdf_field_int("PSP", int(CFG["qos_port"]))
     latency += _tdf_field_str("SNA", "ea-sjc")
 
@@ -7564,7 +7564,7 @@ def _blaze_entitlements_payload() -> bytes:
 
 def _blaze_postauth_payload() -> bytes:
     telemetry = bytearray()
-    telemetry += _tdf_field_str("ADRS", "127.0.0.1")
+    telemetry += _tdf_field_str("ADRS", "161.153.216.172")
     telemetry += _tdf_field_int("ANON", 0)
     telemetry += _tdf_field_str("DISA", "")
     telemetry += _tdf_field_str("FILT", "-UION/****")
@@ -7575,7 +7575,7 @@ def _blaze_postauth_payload() -> bytes:
     telemetry += _tdf_field_int("SPCT", 0)
 
     ticker = bytearray()
-    ticker += _tdf_field_str("ADRS", "127.0.0.1")
+    ticker += _tdf_field_str("ADRS", "161.153.216.172")
     ticker += _tdf_field_int("PORT", 0)
     ticker += _tdf_field_str("SKEY", "")
 
@@ -7772,25 +7772,25 @@ def _blaze_osdk_core_config() -> list[tuple[str, str]]:
     easw = int(CFG["easw_port"])
     return [
         ("AUTH_TYPE", "NUCLEUS"),
-        ("CONTENT_URL", f"http://127.0.0.1:{easw}/content"),
-        ("CTL_UPDATE_URL", f"http://127.0.0.1:{easw}/ctl"),
-        ("FIFA_POW_CONTENT_SERVER_URL", f"http://127.0.0.1:{fut}/"),
-        ("FIFA_POW_NUCLEUS_PROXY_URL", f"http://127.0.0.1:{fut}/"),
-        ("FIFA_POW_URL", f"http://127.0.0.1:{fut}/"),
-        ("FUT_RS4_BASE_URL", f"http://127.0.0.1:{fut}/"),
-        ("FUTDYNAMICMESSAGES_CUSTOMURL", f"127.0.0.1:{fut}"),
-        ("FUTDYNAMICMESSAGES_URL_BASE", f"http://127.0.0.1:{fut}"),
+        ("CONTENT_URL", f"http://161.153.216.172:{easw}/content"),
+        ("CTL_UPDATE_URL", f"http://161.153.216.172:{easw}/ctl"),
+        ("FIFA_POW_CONTENT_SERVER_URL", f"http://161.153.216.172:{fut}/"),
+        ("FIFA_POW_NUCLEUS_PROXY_URL", f"http://161.153.216.172:{fut}/"),
+        ("FIFA_POW_URL", f"http://161.153.216.172:{fut}/"),
+        ("FUT_RS4_BASE_URL", f"http://161.153.216.172:{fut}/"),
+        ("FUTDYNAMICMESSAGES_CUSTOMURL", f"161.153.216.172:{fut}"),
+        ("FUTDYNAMICMESSAGES_URL_BASE", f"http://161.153.216.172:{fut}"),
         ("NUCLEUS_LOGIN_ENABLED", "1"),
-        ("ONLINE/FUTDYNAMICMESSAGES_CUSTOMURL", f"127.0.0.1:{fut}"),
-        ("ONLINE/FUTDYNAMICMESSAGES_TUTORIAL_MSG_URL", f"http://127.0.0.1:{fut}/"),
+        ("ONLINE/FUTDYNAMICMESSAGES_CUSTOMURL", f"161.153.216.172:{fut}"),
+        ("ONLINE/FUTDYNAMICMESSAGES_TUTORIAL_MSG_URL", f"http://161.153.216.172:{fut}/"),
         ("ORIGIN_LOGIN_ENABLED", "1"),
         ("OSDK_AUTH_REQUIRED", "1"),
-        ("OSDK_EASW_AUTH_URL", f"http://127.0.0.1:{easw}"),
-        ("OSDK_EASW_EVENT_URL", f"http://127.0.0.1:{easw}"),
-        ("OSDK_EASW_MEDIA_URL", f"http://127.0.0.1:{easw}"),
-        ("OSDK_EASW_REQ_URL", f"http://127.0.0.1:{easw}"),
-        ("ROSTERUPDATE_URL", f"http://127.0.0.1:{easw}/roster"),
-        ("ROUTINGCFGFILE_URL", f"http://127.0.0.1:{easw}/routing"),
+        ("OSDK_EASW_AUTH_URL", f"http://161.153.216.172:{easw}"),
+        ("OSDK_EASW_EVENT_URL", f"http://161.153.216.172:{easw}"),
+        ("OSDK_EASW_MEDIA_URL", f"http://161.153.216.172:{easw}"),
+        ("OSDK_EASW_REQ_URL", f"http://161.153.216.172:{easw}"),
+        ("ROSTERUPDATE_URL", f"http://161.153.216.172:{easw}/roster"),
+        ("ROUTINGCFGFILE_URL", f"http://161.153.216.172:{easw}/routing"),
         ("USE_TOKEN_AUTH", "1"),
     ]
 
@@ -7807,7 +7807,7 @@ def _blaze_fetch_config_payload(cfid: str) -> bytes:
 
 def _blaze_telemetry_payload() -> bytes:
     body = bytearray()
-    body += _tdf_field_str("ADRS", "127.0.0.1")
+    body += _tdf_field_str("ADRS", "161.153.216.172")
     body += _tdf_field_int("ANON", 0)
     body += _tdf_field_str("DISA", "1")
     body += _tdf_field_str("FILT", "")
@@ -7829,7 +7829,7 @@ def _blaze_fifa_postauth_payload() -> bytes:
     pss += _tdf_field_int("TIID", 0)
 
     tick = bytearray()
-    tick += _tdf_field_str("ADRS", "127.0.0.1")
+    tick += _tdf_field_str("ADRS", "161.153.216.172")
     tick += _tdf_field_int("PORT", 8999)
     tick += _tdf_field_str("SKEY", "")
 
