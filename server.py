@@ -8698,7 +8698,7 @@ Redirect.5.Secure=0
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=APP_NAME)
-    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--host", default="0.0.0.0")
     args = parser.parse_args()
 
     host = args.host
